@@ -1,0 +1,5 @@
+Geral
++ Interface gráfica mais amigável.
++ Melhorar velocidade de descompactação.
++ Criar versão do install.sh para Windows.
+

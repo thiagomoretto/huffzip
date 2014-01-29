@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!--
+	
+	build.xml, version 0.1
+	25-09-2005 17:42	
+	
+	Thiago Galves Moretto
+	25 de Setembro de 2005
+	
+	Este arquivo serve para um projeto básico Java,
+	tem a finalidade de automatizar o processo de 
+	compilação e empacotamento de um Projeto para
+	distribuição.
+
+	Funcionalidades:
+	$ ant new 
+	Cria a árvore de diretórios básica para a criação de um projeto.
+	
+	$ ant compile
+	Apenas compila os fontes.
+	
+	$ ant dist
+	Constrói o JAR de distribuição
+	
+	$ ant build
+	Faz todos os processos.
+	
+	$ ant clean
+	Limpa os diretórios de construção.
+	
+-->
+
+<project name="Huffzip" default="dist" basedir=".">
+	<description>
+		Compactador e descompactador utilizando técnicas de Huffman.
+	</description>
+
+	<!-- 
+	Propriedades configuráveis,
+	configure aqui, nome do projeto, versão e arquivo manifesto.
+	-->
+	<property name="Project" value="huffzip-commandline" />
+	<property name="Version" value="0.2" />
+	<property name="MainClass" value="moretto.CommandLine" />
+
+	<!-- Localizações -->
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="doc" location="doc" />
+	<property name="dist" location="dist" />
+	<property name="inf" location="inf" />
+	<property name="lib" location="lib" />
+    <property name="javadoc.dir" location="doc" />
+	
+	<!-- Onde irá criar o arquivo manifesto -->
+	<property name="manifest" value="inf/MANIFEST-CommandLine.MF" />
+
+	<!-- Manifest -->
+	<target name="manifest">
+		<manifest file="${manifest}">
+			<attribute name="Built-By" value="${user.name}"/>
+			
+			<!-- Retire se não for criar um JAR com classe principal -->
+			<attribute name="Main-class" value="${MainClass}"/>
+			
+		</manifest>
+	</target>
+
+	<!-- Alvos e tarefas -->
+	<!-- #1 Criar um novo projeto -->
+	<target name="new">
+		<tstamp />
+		<mkdir dir="${src}" />
+		<mkdir dir="${bin}" />
+		<mkdir dir="${doc}" />
+		<mkdir dir="${inf}" />
+		<mkdir dir="${lib}" />
+		<mkdir dir="${dist}" />
+	</target>
+	
+	<!-- #2 Prepara o inicio de um novo processo de criação -->
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${bin}" />
+		<mkdir dir="${dist}" />
+        <mkdir dir="${inf}" />
+	</target>
+	
+	<!-- #3 Compila -->
+	<target name="compile" depends="init" description="Compila os fontes">
+		<!-- Classpath -->
+		<javac srcdir="${src}" destdir="${bin}" source="1.4">
+			<classpath>
+				<pathelement path="lib"/>
+				<fileset dir="lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- #4 Prepara o inicio de um novo processo de criação -->
+	<target name="dist" depends="compile,manifest" description="Cria o pacote">
+		<jar 	jarfile="${dist}/${Project}-${Version}.jar"
+				basedir="${bin}"
+				manifest="${manifest}"
+				/>
+	</target>
+	
+	<!-- #5 Faz todos os processo -->
+	<target name="build" depends="dist" description="Faz todos os processo">
+	</target>
+	
+	<!-- #6 Limpa os diretórios de construção -->
+	<target name="clean" description="clean up" >
+		<!-- Delete the ${bin} and ${dist} directory trees -->
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+		<delete dir="${inf}"/>
+	</target>
+    
+    <target name="javadoc">
+        <javadoc destdir="${javadoc.dir}">
+            <fileset dir="${src}"/>
+        </javadoc>
+    </target>
+ </project>

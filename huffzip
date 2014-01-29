@@ -1,0 +1,9 @@
+#!/bin/sh
+
+HUFFZIP_CMDLINE=dist/huffzip-commandline-0.2.jar
+
+if [ -a $HUFFZIP_CMDLINE ]; then
+	java -jar dist/huffzip-commandline-0.2.jar $1 $2 $3
+else
+	echo "Compile e empacote a versão de linha de comando"
+fi
